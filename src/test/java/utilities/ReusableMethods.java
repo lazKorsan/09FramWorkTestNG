@@ -10,7 +10,21 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.FileInputStream;
+import org.apache.poi.ss.usermodel.*;
 import java.util.Set;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/// //
 /// /
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -230,4 +244,118 @@ public class ReusableMethods {
                 e.printStackTrace();
             }
         }
+
+    // Bu metodu utilities/ReusableMethods.java sınıfınıza ekleyin
+
+
+    /**
+     * Belirtilen Excel dosyasındaki, belirtilen sütunda bulunan tüm verileri
+     * bir String listesi olarak döndürür.
+     * @param dosyaYolu Excel dosyasının yolu.
+     * @param sayfaIsmi Çalışılacak sayfanın adı.
+     * @param sutunIndex Verilerin alınacağı sütunun indeksi (0'dan başlar).
+     * @return Sütundaki verileri içeren bir List<String>.
+     */
+    public static List<String> getExcelColumnData(String dosyaYolu, String sayfaIsmi, int sutunIndex) {
+        List<String> sutunVerileri = new ArrayList<>();
+        try {
+            FileInputStream fileInputStream = new FileInputStream(dosyaYolu);
+            Workbook workbook = WorkbookFactory.create(fileInputStream);
+            Sheet sheet = workbook.getSheet(sayfaIsmi);
+
+            int sonSatir = sheet.getLastRowNum();
+
+            for (int i = 0; i <= sonSatir; i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    Cell cell = row.getCell(sutunIndex);
+                    if (cell != null) {
+                        // Hücredeki veriyi String olarak alıp listeye ekliyoruz.
+                        sutunVerileri.add(cell.toString());
+                    } else {
+                        sutunVerileri.add(""); // Boş hücreler için listeye boş string ekle
+                    }
+                }
+            }
+            workbook.close();
+            fileInputStream.close();
+        } catch (IOException e) {
+            System.err.println("Excel dosyasından veri okunurken hata oluştu.");
+            e.printStackTrace();
+        }
+        return sutunVerileri;
     }
+
+
+        public static List<String[]> readExcelData(String filePath, String sheetName) {
+            List<String[]> data = new ArrayList<>();
+
+            try (FileInputStream fis = new FileInputStream(filePath);
+                 Workbook workbook = new XSSFWorkbook(fis)) {
+
+                Sheet sheet = workbook.getSheet(sheetName);
+                if (sheet == null) {
+                    throw new RuntimeException("Sheet '" + sheetName + "' not found in Excel file");
+                }
+
+                int rowCount = sheet.getPhysicalNumberOfRows();
+                for (int i = 1; i < rowCount; i++) { // Başlık satırını atlıyoruz
+                    Row row = sheet.getRow(i);
+                    if (row == null) continue;
+
+                    String mail = getCellValue(row.getCell(0));
+                    String password = getCellValue(row.getCell(1));
+
+                    if (mail != null && password != null) {
+                        data.add(new String[]{mail, password});
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading Excel file: " + e.getMessage(), e);
+            }
+
+            return data;
+        }
+
+        public static void writeResultToExcel(String filePath, String sheetName, int rowNum, String result) {
+            try (FileInputStream fis = new FileInputStream(filePath);
+                 Workbook workbook = new XSSFWorkbook(fis)) {
+
+                Sheet sheet = workbook.getSheet(sheetName);
+                if (sheet == null) {
+                    throw new RuntimeException("Sheet '" + sheetName + "' not found in Excel file");
+                }
+
+                Row row = sheet.getRow(rowNum);
+                if (row == null) {
+                    row = sheet.createRow(rowNum);
+                }
+
+                Cell cell = row.createCell(2); // 3. sütuna yazıyoruz
+                cell.setCellValue(result);
+
+                try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                    workbook.write(fos);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error writing to Excel file: " + e.getMessage(), e);
+            }
+        }
+
+        private static String getCellValue(Cell cell) {
+            if (cell == null) return null;
+
+            switch (cell.getCellType()) {
+                case STRING:
+                    return cell.getStringCellValue().trim();
+                case NUMERIC:
+                    return String.valueOf((int) cell.getNumericCellValue());
+                default:
+                    return null;
+            }
+        }
+    }
+
+
+
+
