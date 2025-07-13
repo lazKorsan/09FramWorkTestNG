@@ -6,6 +6,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class YenidenKullanilabilirMetotlar {
 
     /**
@@ -36,5 +39,29 @@ public class YenidenKullanilabilirMetotlar {
         );
 
         System.out.println("'" + aranacakUrun + "' için arama başarıyla doğrulandı.");
+    }
+    // Bu metot zaten utilities.ReusableMethods dosyanızda mevcut.
+    public static List<String> urunAramaSonuclari(WebDriver driver, String... arananKelimeler) {
+        List<String> bulunanUrunler = new ArrayList<>();
+        for (String urun : arananKelimeler) {
+            driver.get("https://www.testotomasyonu.com/");
+            WebElement aramaKutusu = driver.findElement(By.id("global-search"));
+            aramaKutusu.sendKeys(urun + Keys.ENTER);
+
+            WebElement sonucYazisi = driver.findElement(By.className("product-count-text"));
+            String actualSonucYazisi = sonucYazisi.getText();
+            String urunSayisiStr = actualSonucYazisi.split(" ")[0].trim();
+            try {
+                int urunSayisi = Integer.parseInt(urunSayisiStr);
+                if (urunSayisi > 0) {
+                    bulunanUrunler.add(urun + ": " + urunSayisi + " ürün bulundu");
+                } else {
+                    bulunanUrunler.add(urun + ": ürün bulunamadı!");
+                }
+            } catch (NumberFormatException e) {
+                bulunanUrunler.add(urun + ": ürün sayısı alınamadı! Gelen metin: " + actualSonucYazisi);
+            }
+        }
+        return bulunanUrunler;
     }
 }
