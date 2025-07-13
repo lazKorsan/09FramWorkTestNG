@@ -4,12 +4,18 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+/// /
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+ import java.io.IOException;
+import org.apache.poi.ss.usermodel.*;
 
 public class ReusableMethods {
 
@@ -185,4 +191,43 @@ public class ReusableMethods {
         }
         return bulunanUrunler;
     }
-}
+
+    public static void writeToExcel(String dosyaYolu, int satirNo, int hucreNo, String yazilacakVeri) {
+            try {
+                // 1. Dosyayı aç
+                FileInputStream fileInputStream = new FileInputStream(dosyaYolu);
+                Workbook workbook = WorkbookFactory.create(fileInputStream);
+
+                // 2. İstenen sayfayı (sheet), satırı (row) ve hücreyi (cell) al
+                // Genellikle ilk sayfa ile çalışırız (index 0)
+                Sheet sheet = workbook.getSheetAt(0);
+                Row row = sheet.getRow(satirNo);
+                if (row == null) { // Eğer satır daha önce oluşturulmamışsa, oluştur
+                    row = sheet.createRow(satirNo);
+                }
+
+                Cell cell = row.getCell(hucreNo);
+                if (cell == null) { // Eğer hücre daha önce oluşturulmamışsa, oluştur
+                    cell = row.createCell(hucreNo);
+                }
+
+                // 3. Hücreye veriyi yaz
+                cell.setCellValue(yazilacakVeri);
+
+                // 4. Değişiklikleri kaydetmek için dosyayı tekrar yaz
+                fileInputStream.close(); // Okuma modunu kapat
+                FileOutputStream fileOutputStream = new FileOutputStream(dosyaYolu);
+                workbook.write(fileOutputStream);
+
+                // 5. Kaynakları serbest bırak
+                fileOutputStream.close();
+                workbook.close();
+
+                System.out.println("Excel'e başarıyla yazıldı: " + yazilacakVeri);
+
+            } catch (IOException e) {
+                System.err.println("Excel dosyasına yazılırken bir hata oluştu.");
+                e.printStackTrace();
+            }
+        }
+    }
