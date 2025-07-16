@@ -1,0 +1,14 @@
+
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name= "smoke test suiti " >
+    <test name= "HTML Raporlu test">
+        <classes>
+
+
+            <class name="tests.day16_HTMLReports_DataProvider.C01_RaporluAramaTesti"></class>
+
+        </classes>
+    </test>
+
+</suite>

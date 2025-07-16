@@ -52,10 +52,24 @@
             <version>5.4.1</version>
         </dependency>
         <!--[extentreports][linkden arat ] https://mvnrepository.com/artifact/com.aventstack/extentreports -->
+        <!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
         <dependency>
             <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>5.1.2</version>
+            <version>4.0.9</version>
+        </dependency>
+        <!-- slf4j-api, Driver sinifindaki Logger icin gerekli -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+        <!-- slf4j-simple, slf4j'nin calismasi icin bir implementasyon saglar -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

@@ -1,5 +1,6 @@
 package tests.day14_TestNG_Framework;
 
+import org.openqa.selenium.Keys;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.TestOtomasyonuPage;
@@ -70,7 +71,7 @@ public class C07_ConfigurationDosyasiKullanimi {
         TestOtomasyonuPage testOtomasyonuPage = new TestOtomasyonuPage();
 
         // 2. Oluşturduğumuz NESNE üzerinden arama kutusuna erişiyoruz.
-        testOtomasyonuPage.aramaKutusu.sendKeys("phone");
+        testOtomasyonuPage.aramaKutusu.sendKeys("phone"+ Keys.ENTER);
 
         // 3. Yine NESNE üzerinden ürün listesine erişip sayısını alıyoruz.
         int actualAramaSonucu = testOtomasyonuPage.bulunanUrunElementleriList.size();

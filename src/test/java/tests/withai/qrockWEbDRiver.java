@@ -1,4 +1,4 @@
-package utilities;
+package tests.withai;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
@@ -7,10 +7,11 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utilities.ConfigReader;
+import utilities.Driver;
 
 import java.time.Duration;
 
-public class Driver {
+public class qrockWEbDRiver {
     private static final ThreadLocal<WebDriver> driverPool = new ThreadLocal<>();
     private static final Logger logger = LoggerFactory.getLogger(Driver.class);
     private static final String BROWSER_TYPE = "browser";
@@ -22,7 +23,7 @@ public class Driver {
             ConfigReader.getProperty("warmupAttempts", "3")
     );
 
-    private Driver() {}
+    private void Driver() {}
 
     /**
      * Returns a thread-safe WebDriver instance after performing warmup if needed.
